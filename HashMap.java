@@ -2,7 +2,6 @@
 import java.util.Arrays;
 import java.util.Objects;
 
-//Коллизию решаю с помощью связанного списка
 
 public class MyHashMap<K, V> {
 
@@ -12,7 +11,6 @@ public class MyHashMap<K, V> {
 
     private int size;
 
-    //  private ArrayList<Node<K, V>>[] table;
     private Node<K, V>[] table;
 
 
@@ -92,8 +90,13 @@ public class MyHashMap<K, V> {
             return null;
         }
 
+
         Node<K, V> temp = table[index];
 
+
+        if(table[index] == null){
+            return null;
+        }
 
         if(temp.key.equals(key)){
             return temp.value;
@@ -107,12 +110,129 @@ public class MyHashMap<K, V> {
                 }
                 temp = temp.next;
             }
-            return temp.value;
+
+            if (temp.getKey().equals(key)) {
+                return temp.value;
+            }
+          //  return temp.value;
         }
 
         return null;
+
+//        int index = convertHashToIndex(key);
+//
+//        if(size() == 0){
+//            return null;
+//        }
+//
+//
+//        Node<K, V> temp = table[index];
+//
+//
+//        if(table[index] == null){
+//            return null;
+//        }
+//
+//        if(temp.key.equals(key)){
+//            return temp.value;
+//        }
+//
+//        if (table[index] != null) {
+//
+//            while (temp.next != null) {
+//                if (temp.getKey().equals(key)) {
+//                    return temp.value;
+//                }
+//                temp = temp.next;
+//            }
+//            return temp.value;
+//        }
+//
+//        return null;
     }
 
+    public V remove(Object key){
+
+        if(size() == 0){
+            return null;
+        }
+
+        int index = convertHashToIndex(key);
+
+        Node<K,V> previous  = null;
+
+        Node<K,V> node = table[index];
+
+        //Если мапа заполнена. Нет коллизи
+        if(node.key.equals(key) && size() <= defaultSize){
+            V valueByKey = node.value;
+            table[index] = null;
+            size--;
+            return valueByKey;
+        }
+
+        do{
+            if(node.key.equals(key)){
+                if(previous == null){
+                    previous = node.next;
+                    table[index] = previous;
+                    size--;
+                    return node.value;
+                }
+            }else{
+                previous = node;
+                node = node.next;
+                if(node.key.equals(key)){
+                    previous.next = node.next;
+                    size--;
+                    return node.value;
+                }
+            }
+        }while (node.next != null);
+
+
+//        else{
+//            previous = node;
+//
+//            do{
+//                node = node.next;
+//                if(node.key.equals(key)){
+//                    previous.next = node.next;
+//                }
+//            }while (node.next != null);
+//        }
+
+
+
+
+
+
+        return null;
+
+
+
+
+//        if(node == null){
+//            return null;
+//        }else{
+//            if(node.key.equals(key) && node.next == null){
+//                V valueByKey = node.value;
+//                table[index] = null;
+//                return valueByKey;
+//            }else{
+//                do{
+//                    node = node.next;
+//                    if(node.key.equals(key)){
+//                        table[index] = node;
+//                    }else{
+//                        previous = node;
+//                    }
+//
+//                }while (node.next != null);
+//            }
+//        }
+//        return node.value;
+    }
     public boolean containsKey(Object key) {
 
         if(size() == 0){
@@ -123,6 +243,9 @@ public class MyHashMap<K, V> {
 
         Node<K, V> temp = table[index];
 
+        if(table[index] == null){
+            return false;
+        }
 
         if (table[index] != null) {
 
