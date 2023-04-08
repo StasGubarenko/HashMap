@@ -35,6 +35,34 @@ class MyHashMapTest {
     }
 
     @Test
+    @DisplayName("Проверка добавление записи в мапу. Кейс, при котором меняем ноду в массиве")
+    public void testAddingNodeInHashMap1() {
+        MyHashMap<Integer, Integer> hashMap = new MyHashMap<>();
+
+        int valueOfHashMap = 10;
+        for(int i = 0; i < 1000; i++){
+            hashMap.put(i,valueOfHashMap);
+            valueOfHashMap += 10;
+        }
+
+        int valueOfArray = 10;
+        int[] arrayOfValue = new int[1000];
+        for(int i = 0; i < 1000; i++){
+            arrayOfValue[i] = valueOfArray;
+            valueOfArray += 10;
+        }
+
+        hashMap.put(0,10);
+        Assertions.assertAll(() ->{
+            for(int i = 0; i < arrayOfValue.length; i++){
+                if(arrayOfValue[i] != hashMap.get(i)){
+                    throw new RuntimeException();
+                }
+            }
+        });
+    }
+
+    @Test
     @DisplayName("Проверка перезаписи value при одинаковых ключах")
     public void replaceValueWhenKeysIsTheSame()  {
         MyHashMap<Integer, Integer> hashMap = new MyHashMap<>();
